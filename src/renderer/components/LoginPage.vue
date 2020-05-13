@@ -26,6 +26,7 @@
 </template>
 <script>
     import api from '@/config/api';
+    import {formPost} from '../utils/api'
 
     export default {
         data() {
@@ -41,7 +42,7 @@
                     ],
                     password: [
                         {required: true, message: '请输入密码', trigger: 'blur'},
-                        {min: 6, message: '密码不得低于6个字符', trigger: 'blur'},
+                        {min: 3, message: '密码不得低于3个字符', trigger: 'blur'},
                     ],
                 },
                 loading: false,
@@ -56,19 +57,19 @@
                     }
                     this.loading = true;
                     let root = this.root;
-                    this.axios.post(root + 'auth/login', {
+                    formPost(root + '/login', {
                         username: this.form.username,
                         password: this.form.password
                     }).then((res) => {
                         let call = res.data;
                         console.log(call);
                         this.loading = false;
-                        if (res.data.errno === 0) {
-                            console.log(res.data.data);
-                            localStorage.setItem('token', res.data.data.token);
-                            localStorage.setItem('userInfo', JSON.stringify(res.data.data.userInfo));
-                            console.log(JSON.stringify(res.data.data.token))
-                            console.log(JSON.stringify(res.data.data.userInfo))
+                        if (res.code === 200) {
+                            console.log(res.data);
+                            localStorage.setItem('token', res.data);
+                            // localStorage.setItem('userInfo', JSON.stringify(res.data.data.userInfo));
+                            console.log(JSON.stringify(res.data))
+                            // console.log(JSON.stringify(res.data.data.userInfo))
                             this.$router.push({name: 'welcome'});
                             let sUserAgent = navigator.userAgent;
                             // todo 手机端
@@ -108,7 +109,7 @@
 <style>
     .login {
         align-items: center;
-        background: url("http://hiolabs.com/demo/static/images/back1.jpg"); 
+        background: url("http://hiolabs.com/demo/static/images/back1.jpg");
 		/* 以上为登录背景,可以自己更换成自己喜欢的 */
         background-size: 100%;
         background-repeat:no-repeat;

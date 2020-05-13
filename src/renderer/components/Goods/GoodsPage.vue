@@ -116,28 +116,28 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="name" label="商品名称"></el-table-column>
-                    <el-table-column prop="sort_order" label="排序" width="140" sortable>
+                    <el-table-column prop="sort" label="排序" width="140" sortable>
                         <template scope="scope">
-                            <el-input-number class="sort-width" size="mini" :min="1" :max="100" controls-position="right" v-model="scope.row.sort_order" placeholder="排序" @blur="submitSort(scope.$index, scope.row)" @change="submitSort(scope.$index, scope.row)"></el-input-number>
+                            <el-input-number class="sort-width" size="mini" :min="1" :max="100" controls-position="right" v-model="scope.row.sort" placeholder="排序" @blur="submitSort(scope.$index, scope.row)" @change="submitSort(scope.$index, scope.row)"></el-input-number>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="sell_volume" label="销量" width="80" sortable></el-table-column>
-                    <el-table-column prop="goods_number" label="库存" width="80" sortable>
+                    <el-table-column prop="sales" label="销量" width="80" sortable></el-table-column>
+                    <el-table-column prop="stockNumber" label="库存" width="80" sortable>
                     </el-table-column>
-                    <el-table-column label="首页显示" width="80">
-                        <template scope="scope">
-                            <el-switch
-                                    v-model="scope.row.is_index"
-                                    active-text=""
-                                    inactive-text=""
-                                    @change='changeShowStatus($event,scope.row.id)'>
-                            </el-switch>
-                        </template>
-                    </el-table-column>
+<!--                    <el-table-column label="首页显示" width="80">-->
+<!--                        <template scope="scope">-->
+<!--                            <el-switch-->
+<!--                                    v-model="scope.row.is_index"-->
+<!--                                    active-text=""-->
+<!--                                    inactive-text=""-->
+<!--                                    @change='changeShowStatus($event,scope.row.id)'>-->
+<!--                            </el-switch>-->
+<!--                        </template>-->
+<!--                    </el-table-column>-->
                     <el-table-column label="上架" width="80">
                         <template scope="scope">
                             <el-switch
-                                    v-model="scope.row.is_on_sale"
+                                    v-model="scope.row.status"
                                     active-text=""
                                     inactive-text=""
                                     @change='changeStatus($event,scope.row.id)'>
@@ -390,16 +390,16 @@
                 })
             },
             getList() {
-                this.axios.get('goods', {
+                this.axios.get('/auth/admin/goods/list', {
                     params: {
-                        page: this.page,
-						size: this.size,
+                        pageNo: this.page,
+						pageSize: this.size,
                         name: this.filterForm.name
                     }
                 }).then((response) => {
-                    this.tableData = response.data.data.data
-                    this.page = response.data.data.currentPage
-                    this.total = response.data.data.count
+                    this.tableData = response.data.records
+                    this.page = response.data.current
+                    this.total = response.data.total
                 })
             },
             getOnSaleList() {
